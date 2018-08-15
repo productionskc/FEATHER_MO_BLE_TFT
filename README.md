@@ -4,7 +4,7 @@ PLEASE DO NOT USE THIS PROJECT AS YOUR PRIMARY SOURCE OF ALTITUDE AWARENESS DURI
 
 GEAR CHECKS SAVE LIVES
 
-Parts List:
+Parts List: <br>
 https://www.adafruit.com/product/2995 <br>
 https://www.adafruit.com/product/2651 <br>
 https://www.adafruit.com/product/3315 <br>
