@@ -144,6 +144,12 @@ void setup(void)
   /* Disable command echo from Bluefruit */
   ble.echo(false);
 
+  /* CHANGE YOUR NAME TO SOMETHING DIFFERENT */
+  
+  if (! ble.sendCommandCheckOK(F("AT+GAPDEVNAME=WWAVER ALTI")) ) {
+    error(F("Could not set device name?"));
+  }
+  
   Serial.println("Requesting Bluefruit info:");
   /* Print Bluefruit information */
   ble.info();
@@ -259,38 +265,37 @@ void loop(void)
     boolean pressed = packetbuffer[3] - '0';
     Serial.print ("Button "); Serial.print(buttnum);
     if (pressed) {
-        float pressureSet = 0;
-        for(int i = 0; i < SAMPLESIZE; i++)
-            {
-              pressureSet += bmp.readPressure();
-                }
+      float pressureSet = 0;
+      for(int i = 0; i < SAMPLESIZE; i++)
+        {
+          pressureSet += bmp.readPressure();
+        } 
       relAlt = (pressureSet / (SAMPLESIZE * 100));
-   //   relAlt = (bmp.readPressure()/100);
-      Serial.println(" GPL Reset");
-       tft.fillScreen(ILI9341_BLACK);
-       tft.setRotation(1);
-        tft.setTextColor(ILI9341_YELLOW);  tft.setTextSize(6);
-        tft.setCursor(0,0);
-        tft.print("GROUND PRESSURE OFFSET HAS BEEN RESET");
-       
-        tft.fillScreen(ILI9341_BLACK);
-         tft.setRotation(1);
-        tft.setTextColor(ILI9341_YELLOW);  tft.setTextSize(2);
-        tft.setCursor(0,0);
-  tft.print("ALTITUDE:");
-  tft.setCursor(200, 0);
-  tft.print("TIME:");
-  tft.println("");
-  tft.setCursor(0, 185);
-  tft.print("ALT: ");
-  tft.setCursor(150, 185);
-  tft.print("BATT: ");
-  tft.setCursor(0, 205);
-  tft.print("TEMP: ");
-  tft.setCursor(0, 225);
-  tft.print("GPL: ");
-       
+      //   relAlt = (bmp.readPressure()/100);
+      Serial.println("GPL Reset");
+      tft.fillScreen(ILI9341_BLACK);
+      tft.setRotation(1);
+      tft.setTextColor(ILI9341_YELLOW);  tft.setTextSize(6);
+      tft.setCursor(0,0);
+      tft.print("GROUND PRESSURE OFFSET HAS BEEN RESET");
+      counter = 0;
     } else {
+      tft.fillScreen(ILI9341_BLACK);
+      tft.setRotation(1);
+      tft.setTextColor(ILI9341_YELLOW);  tft.setTextSize(2);
+      tft.setCursor(0,0);
+      tft.print("ALTITUDE:");
+      tft.setCursor(200, 0);
+      tft.print("TIME:");
+      tft.println("");
+      tft.setCursor(0, 185);
+      tft.print("ALT: ");
+      tft.setCursor(150, 185);
+      tft.print("BATT: ");
+      tft.setCursor(0, 205);
+      tft.print("TEMP: ");
+      tft.setCursor(0, 225);
+      tft.print("GPL: ");
       Serial.println(" released");
     }
   }
@@ -326,37 +331,20 @@ void loop(void)
     pressureLive += (bmp.readAltitude(relAlt)*3.28084);
   }
     currentAlt = (pressureLive / (SAMPLESIZE));
-  //   currentAlt = (bmp.readAltitude(relAlt)*3.28084);
+    //   currentAlt = (bmp.readAltitude(relAlt)*3.28084);
     roundAlt = round(currentAlt);
     round2 = (roundAlt);
-    Serial.print("Temperature = ");
-    Serial.print(currentTemp);
-    Serial.println("");
 
-    Serial.print("Current BPI = ");
-    Serial.print(bmp.readPressure()/100);
-    Serial.println("");
-   
-    Serial.print("Current Altitude = ");
-    Serial.print(bmp.readAltitude(relAlt)*3.28084); // this should be adjusted to your local forcase
-    Serial.println("");
-
-    Serial.print("Rounded Altitude = ");
-    Serial.print(roundAlt);
-    Serial.println("");
-
-    Serial.print("Ground Pressure Level = ");
-    Serial.print(relAlt); 
-    Serial.println("");
-
-    Serial.print("Time Counted = ");
-    Serial.print(counter);
-    Serial.println("");
-
-  
+/* Export to Serial */
+    Serial.print("Temperature = "); Serial.print(currentTemp); Serial.println("");
+    Serial.print("Current BPI = "); Serial.print(bmp.readPressure()/100); Serial.println("");
+    Serial.print("Current Altitude = "); Serial.print(bmp.readAltitude(relAlt)*3.28084); Serial.println("");
+    Serial.print("Rounded Altitude = "); Serial.print(roundAlt); Serial.println("");
+    Serial.print("Ground Pressure Level = "); Serial.print(relAlt); Serial.println("");
+    Serial.print("Time Counted = "); Serial.print(counter); Serial.println("");
     Serial.print("VBat = " ); Serial.print(measuredvbat); Serial.println("");
-  
 
+/* Update Display */ 
     counter++;
   tft.begin();
   tft.setRotation(1);
@@ -383,7 +371,7 @@ void loop(void)
   tft.print(relAlt);
   tft.print(" Pa");
   
- 
+/* Update SD Card */ 
   File dataFile = SD.open("datalog.txt", FILE_WRITE);
 
   // if the file is available, write to it:
@@ -403,7 +391,7 @@ void loop(void)
     Serial.println("error opening datalog.txt");
   }
 
-//  delay(1000);
+//  delay(1000); Don't Slow me down bro.
 
 
 
